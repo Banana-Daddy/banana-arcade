@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BANANA ARCADE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+  <div class="crt-curve"></div>
+
+  <header class="marquee">
+    <div class="bolt tl"></div><div class="bolt tr"></div>
+    <div class="bolt bl"></div><div class="bolt br"></div>
+    <h1 class="marquee-title">BANANA ARCADE</h1>
+    <div class="marquee-sub">— BANANACORP ENTERTAINMENT SYSTEMS —</div>
+  </header>
+
+  <main id="screen">
+    <section id="hub" class="view active">
+      <div class="hub-top">
+        <div class="hub-credits">CREDITS <span class="neon-green">99</span></div>
+        <div class="hub-select neon">◄ SELECT GAME ►</div>
+        <div class="hub-sound" id="soundToggle">SOUND: <span class="neon-green">ON</span></div>
+      </div>
+      <div id="cabinets" class="cabinets"></div>
+      <div class="hub-footer">
+        <span class="key">←</span><span class="key">→</span> <span class="dim">SELECT</span>
+        &nbsp;&nbsp;
+        <span class="key">ENTER</span> <span class="dim">PLAY</span>
+        &nbsp;&nbsp;
+        <span class="key">M</span> <span class="dim">MUTE</span>
+      </div>
+    </section>
+
+    <section id="game" class="view">
+      <div class="game-hud">
+        <button id="backBtn" class="back-btn">◄ HUB</button>
+        <div class="game-title-wrap">
+          <div id="gameTitle" class="neon"></div>
+          <div id="gameControls" class="dim"></div>
+        </div>
+        <div class="game-stats">
+          <div>SCORE <span id="gameScore" class="neon-green">0</span></div>
+          <div>HIGH <span id="gameHigh" class="neon-pink">0</span></div>
+        </div>
+      </div>
+      <div id="gameContainer" class="game-container"></div>
+    </section>
+  </main>
+
+  <div id="boot" class="boot">
+    <div class="boot-inner">
+      <div class="boot-logo neon">BANANACORP</div>
+      <div class="boot-ver">SYSTEM v2.048 // (C) 1987-2026</div>
+      <div id="bootLog" class="boot-log"></div>
+      <div class="boot-prompt neon-green blink">PRESS ANY KEY</div>
+    </div>
+  </div>
+
+  <script type="module" src="arcade.js"></script>
+</body>
+</html>
