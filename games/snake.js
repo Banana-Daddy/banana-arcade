@@ -104,9 +104,9 @@ export default {
         ctx.globalAlpha = 1;
       });
 
-      if (!started) overlay('BANANA SNAKE', 'SPACE TO BEGIN');
+      if (!started) overlay('BANANA SNAKE', 'TAP / SPACE TO BEGIN');
       else if (paused) overlay('PAUSED', 'P TO RESUME');
-      else if (dead) overlay('GAME OVER', 'R TO RESTART  ·  ESC TO EXIT');
+      else if (dead) overlay('GAME OVER', 'TAP / R TO RESTART');
     }
 
     function drawBanana(cx, cy) {
@@ -171,12 +171,42 @@ export default {
       e.preventDefault();
     }
 
+    let touchStart = null;
+    function onTouchStart(e) {
+      e.preventDefault();
+      if (e.touches.length !== 1) return;
+      const t = e.touches[0];
+      touchStart = { x: t.clientX, y: t.clientY };
+      if (!started) { started = true; return; }
+      if (dead) { reset(); started = true; }
+    }
+    function onTouchEnd(e) {
+      if (!touchStart) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - touchStart.x;
+      const dy = t.clientY - touchStart.y;
+      if (Math.abs(dx) > 24 || Math.abs(dy) > 24) {
+        if (Math.abs(dx) > Math.abs(dy)) {
+          if (dx > 0 && dir.x === 0) next = { x: 1, y: 0 };
+          else if (dx < 0 && dir.x === 0) next = { x: -1, y: 0 };
+        } else {
+          if (dy > 0 && dir.y === 0) next = { x: 0, y: 1 };
+          else if (dy < 0 && dir.y === 0) next = { x: 0, y: -1 };
+        }
+      }
+      touchStart = null;
+    }
+
     window.addEventListener('keydown', onKey);
+    canvas.addEventListener('touchstart', onTouchStart, { passive: false });
+    canvas.addEventListener('touchend', onTouchEnd, { passive: true });
     loop();
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('keydown', onKey);
+      canvas.removeEventListener('touchstart', onTouchStart);
+      canvas.removeEventListener('touchend', onTouchEnd);
       canvas.remove();
     };
   }

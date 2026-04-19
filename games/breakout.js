@@ -281,10 +281,24 @@ export default {
       launch();
     }
 
+    function onTouchMove(e) {
+      if (!e.touches.length) return;
+      const t = e.touches[0];
+      onMouse({ clientX: t.clientX, clientY: t.clientY });
+    }
+    function onTouchStart(e) {
+      e.preventDefault();
+      if (!e.touches.length) return;
+      const t = e.touches[0];
+      onMouse({ clientX: t.clientX, clientY: t.clientY });
+      onClick();
+    }
     window.addEventListener('keydown', onKey);
     window.addEventListener('keyup', onKeyUp);
     canvas.addEventListener('mousemove', onMouse);
     canvas.addEventListener('mousedown', onClick);
+    canvas.addEventListener('touchmove', onTouchMove, { passive: true });
+    canvas.addEventListener('touchstart', onTouchStart, { passive: false });
     loop();
 
     return () => {
@@ -293,6 +307,8 @@ export default {
       window.removeEventListener('keyup', onKeyUp);
       canvas.removeEventListener('mousemove', onMouse);
       canvas.removeEventListener('mousedown', onClick);
+      canvas.removeEventListener('touchmove', onTouchMove);
+      canvas.removeEventListener('touchstart', onTouchStart);
       canvas.remove();
     };
   }

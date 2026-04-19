@@ -210,6 +210,7 @@ async function startGame(id) {
   gameHighEl.textContent = String(storage.getHigh(id)).padStart(6, '0');
   const container = document.getElementById('gameContainer');
   container.innerHTML = '';
+  document.body.classList.add('in-game');
   audio.resume();
   audio.start();
   currentUnmount = game.mount({
@@ -228,6 +229,7 @@ async function startGame(id) {
 
 function exitGame() {
   if (currentUnmount) { currentUnmount(); currentUnmount = null; }
+  document.body.classList.remove('in-game');
   showView('hub');
   renderCabinets();
 }

@@ -234,14 +234,17 @@ export default {
       flap();
     }
 
+    function onTouch(e) { e.preventDefault(); onClick(); }
     window.addEventListener('keydown', onKey);
     canvas.addEventListener('mousedown', onClick);
+    canvas.addEventListener('touchstart', onTouch, { passive: false });
     loop();
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('keydown', onKey);
       canvas.removeEventListener('mousedown', onClick);
+      canvas.removeEventListener('touchstart', onTouch);
       canvas.remove();
     };
   }

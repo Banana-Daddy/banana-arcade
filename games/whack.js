@@ -365,8 +365,17 @@ export default {
       if (k === 'r' && ended) { reset(); started = true; e.preventDefault(); }
     }
 
+    function onTouchStart(e) {
+      e.preventDefault();
+      if (!e.touches.length) return;
+      const t = e.touches[0];
+      const p = toCanvas({ clientX: t.clientX, clientY: t.clientY });
+      mouseX = p.x; mouseY = p.y;
+      onClick({ clientX: t.clientX, clientY: t.clientY });
+    }
     canvas.addEventListener('mousemove', onMove);
     canvas.addEventListener('mousedown', onClick);
+    canvas.addEventListener('touchstart', onTouchStart, { passive: false });
     window.addEventListener('keydown', onKey);
     canvas.style.cursor = 'none';
     loop(performance.now());
@@ -375,6 +384,7 @@ export default {
       cancelAnimationFrame(raf);
       canvas.removeEventListener('mousemove', onMove);
       canvas.removeEventListener('mousedown', onClick);
+      canvas.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('keydown', onKey);
       canvas.style.cursor = '';
       canvas.remove();
