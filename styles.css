@@ -18,7 +18,7 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
 body {
-  background: #000;
+  background: radial-gradient(ellipse at center, #14141c 0%, #000 100%);
   color: var(--ink);
   font-family: var(--pixel);
   font-size: 12px;
@@ -49,11 +49,6 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 @keyframes flicker {
   0%, 95%, 100% { opacity: 1; }
   96% { opacity: 0.85; } 97% { opacity: 1; } 98% { opacity: 0.9; }
-}
-
-body::before {
-  content: ""; position: fixed; inset: 0; z-index: 197; pointer-events: none;
-  background: radial-gradient(ellipse at center, var(--bg2) 0%, #000 100%);
 }
 
 #screen {
