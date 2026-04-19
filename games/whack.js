@@ -346,7 +346,7 @@ export default {
     function onMove(e) { const p = toCanvas(e); mouseX = p.x; mouseY = p.y; }
     function onClick(e) {
       if (!started) { started = true; return; }
-      if (ended) return;
+      if (ended) { reset(); started = true; return; }
       const p = toCanvas(e);
       smashT = 8;
       for (const h of holes) {

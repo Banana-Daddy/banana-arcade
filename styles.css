@@ -106,8 +106,8 @@ button { font-family: inherit; color: inherit; background: none; border: none; c
 .hub-select { font-size: 0.8rem; letter-spacing: 0.3em; }
 
 .cabinets {
-  flex: 1; display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px;
-  align-items: center; padding: 10px 0;
+  flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
+  align-items: start; padding: 10px 0;
 }
 
 .cabinet {

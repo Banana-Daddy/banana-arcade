@@ -1,9 +1,12 @@
 const GAMES = [
-  { id: 'snake',    name: 'BANANA SNAKE',  tag: 'EAT · GROW',         color: '#39FF14', controls: '← ↑ ↓ → MOVE  ·  P PAUSE  ·  R RESTART' },
-  { id: 'flappy',   name: 'FLAPPY NANA',   tag: 'DODGE THE JUNGLE',   color: '#FFE135', controls: 'SPACE / CLICK FLAP  ·  P PAUSE  ·  R RESTART' },
-  { id: 'breakout', name: 'SMASH BUNCH',   tag: 'BREAK THE FRUIT',    color: '#00FFFF', controls: '← → MOVE  ·  SPACE LAUNCH  ·  P PAUSE' },
-  { id: 'tile2048', name: '2048 PEELS',    tag: 'MERGE & CONQUER',    color: '#FF10F0', controls: 'ARROWS MERGE  ·  U UNDO  ·  R RESTART' },
-  { id: 'whack',    name: 'WHACK-A-MONKEY',tag: 'PROTECT THE GROVE',  color: '#FF3864', controls: 'CLICK WHACK  ·  60 SECONDS' }
+  { id: 'snake',    name: 'BANANA SNAKE',   tag: 'EAT · GROW',         color: '#39FF14', controls: '← ↑ ↓ → / SWIPE MOVE  ·  P PAUSE  ·  R RESTART' },
+  { id: 'flappy',   name: 'FLAPPY NANA',    tag: 'DODGE THE JUNGLE',   color: '#FFE135', controls: 'SPACE / TAP FLAP  ·  P PAUSE  ·  R RESTART' },
+  { id: 'breakout', name: 'SMASH BUNCH',    tag: 'BREAK THE FRUIT',    color: '#00FFFF', controls: '← → / DRAG MOVE  ·  SPACE / TAP LAUNCH' },
+  { id: 'pong',     name: 'BANANA PONG',    tag: 'FIRST TO 10',        color: '#FF10F0', controls: '↑ ↓ / DRAG MOVE  ·  SPACE / TAP SERVE' },
+  { id: 'whack',    name: 'WHACK-A-MONKEY', tag: 'PROTECT THE GROVE',  color: '#FF3864', controls: 'CLICK / TAP WHACK  ·  60 SECONDS' },
+  { id: 'invaders', name: 'SPACE NANAS',    tag: 'DEFEND THE GALAXY',  color: '#9D4EDD', controls: '← → / DRAG MOVE  ·  AUTO-FIRE' },
+  { id: 'simon',    name: 'BANANA SIMON',   tag: 'REPEAT THE TUNE',    color: '#FF8C00', controls: 'TAP / Q W A S PADS  ·  R RESTART' },
+  { id: 'missile',  name: 'MISSILE CMD',    tag: 'SAVE THE FARMS',     color: '#FFD700', controls: 'TAP / CLICK SKY TO FIRE' }
 ];
 
 class Audio8bit {
@@ -153,19 +156,64 @@ function startPreview(canvas, game) {
       ctx.fillRect(bx - 10, H - 10, 20, 4);
       ctx.fillStyle = '#fff';
       ctx.fillRect(W/2 + Math.sin(t/5) * 25, H/2 + Math.cos(t/7) * 15, 4, 4);
-    } else if (game.id === 'tile2048') {
-      const labels = ['2','4','8','16'];
-      const cols = ['#FFE135','#FFB000','#FF8000','#FF4000'];
-      for (let r = 0; r < 2; r++) for (let c = 0; c < 2; c++) {
-        const i = (r*2 + c + Math.floor(t/30)) % 4;
-        const x = 10 + c*30, y = 10 + r*30;
-        ctx.fillStyle = cols[i];
-        ctx.fillRect(x, y, 26, 26);
-        ctx.fillStyle = '#000';
-        ctx.font = 'bold 11px monospace';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(labels[i], x + 13, y + 13);
+    } else if (game.id === 'pong') {
+      ctx.fillStyle = '#1e1e3a';
+      for (let y = 4; y < H; y += 8) ctx.fillRect(W/2 - 1, y, 2, 4);
+      const py = Math.sin(t/15) * 18;
+      ctx.fillStyle = '#FF10F0';
+      ctx.fillRect(5, H/2 - 10 + py, 4, 20);
+      ctx.fillStyle = '#00FFFF';
+      ctx.fillRect(W - 9, H/2 - 10 - py * 0.8, 4, 20);
+      ctx.fillStyle = '#FFE135';
+      ctx.fillRect(W/2 + Math.sin(t/6) * 22, H/2 + Math.cos(t/8) * 16, 4, 4);
+    } else if (game.id === 'invaders') {
+      const dx = Math.sin(t/22) * 5;
+      const rowColors = ['#FF3864','#9D4EDD','#FF8C00'];
+      for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) {
+        ctx.fillStyle = rowColors[r];
+        ctx.fillRect(8 + c*17 + dx, 8 + r*12, 10, 8);
+      }
+      ctx.fillStyle = '#FFE135';
+      const px = W/2 + Math.sin(t/10) * 22 - 6;
+      ctx.fillRect(px, H - 14, 12, 6);
+      ctx.fillRect(px + 4, H - 18, 4, 4);
+      if ((t % 20) < 10) { ctx.fillStyle = '#FFE135'; ctx.fillRect(px + 5, H - 28, 2, 6); }
+    } else if (game.id === 'simon') {
+      const active = Math.floor(t/20) % 4;
+      const pads = ['#39FF14', '#FF3864', '#FFE135', '#00FFFF'];
+      const dim = ['#1a4a10', '#6a1828', '#6a5810', '#106a6a'];
+      const positions = [[0,0],[1,0],[0,1],[1,1]];
+      for (let i = 0; i < 4; i++) {
+        const [px, py] = positions[i];
+        ctx.fillStyle = i === active ? pads[i] : dim[i];
+        ctx.fillRect(6 + px*35, 6 + py*35, 33, 33);
+      }
+      ctx.fillStyle = '#0a0a14';
+      ctx.beginPath();
+      ctx.arc(W/2, H/2, 10, 0, Math.PI*2);
+      ctx.fill();
+    } else if (game.id === 'missile') {
+      ctx.fillStyle = '#3a2208';
+      ctx.fillRect(0, H - 12, W, 12);
+      for (let i = 0; i < 3; i++) {
+        const fx = 15 + i * 22;
+        ctx.fillStyle = '#2d7a2d';
+        ctx.fillRect(fx - 5, H - 20, 10, 4);
+        ctx.fillStyle = '#FFE135';
+        ctx.fillRect(fx - 3, H - 28, 2, 8);
+        ctx.fillRect(fx, H - 28, 2, 8);
+      }
+      for (let i = 0; i < 4; i++) {
+        const ex = 10 + i * 18;
+        const ey = ((t + i * 40) * 0.7) % (H - 20);
+        ctx.strokeStyle = 'rgba(255,56,100,0.3)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(ex, 0);
+        ctx.lineTo(ex, ey);
+        ctx.stroke();
+        ctx.fillStyle = '#FF3864';
+        ctx.fillRect(ex - 1, ey, 3, 3);
       }
     } else if (game.id === 'whack') {
       for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) {
