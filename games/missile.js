@@ -49,15 +49,17 @@ export default {
           wave++;
           waveRemaining = 5 + wave * 2;
           waveDone = false;
+          spawnT = 9999;
         }
-        return;
       }
-      spawnT++;
-      const interval = Math.max(25, 95 - wave * 6);
-      if (spawnT > interval && enemies.length < 5 && waveRemaining > 0 && !waveDone) {
-        spawnEnemy();
-        waveRemaining--;
-        spawnT = 0;
+      if (waveBreakT === 0 && !waveDone) {
+        spawnT++;
+        const interval = Math.max(25, 95 - wave * 6);
+        if (spawnT > interval && enemies.length < 5 && waveRemaining > 0) {
+          spawnEnemy();
+          waveRemaining--;
+          spawnT = 0;
+        }
       }
 
       enemies.forEach(e => {
@@ -110,10 +112,10 @@ export default {
 
       if (farms.every(f => !f.alive)) { dead = true; audio.die(); return; }
 
-      if (!waveDone && waveRemaining <= 0 && enemies.length === 0) {
+      if (!waveDone && waveRemaining <= 0 && enemies.length === 0 && waveBreakT === 0) {
         waveDone = true;
         audio.powerup();
-        waveBreakT = 90;
+        waveBreakT = 80;
       }
     }
 
